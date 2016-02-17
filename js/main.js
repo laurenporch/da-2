@@ -22,6 +22,7 @@ window.onload = function() {
         game.load.image('tiles','assets/tiles_underwater.png');
         game.load.spritesheet('shark', 'assets/shark-sprite.png',120,99);
         game.load.spritesheet('blue', 'assets/BlueFish4.png',1435, 1080);
+        game.load.spritesheet('purple', 'assets/RedFish2.png', 1296, 1080);
         
     }
     
@@ -65,10 +66,29 @@ window.onload = function() {
         // The camera should follow the shark.
         game.camera.follow(shark);
         
+        // Add some fishies.
+        bluefishies = game.add.group();
+        purplefishies = game.add.group();
+
+        //  Enable physics for the fishies.
+        bluefishies.enableBody = true;
+        purplefishies.enableBody = true;
+
+        // Make a blue fish!        
+        var bluefish = bluefishies.create(165,150, 'blue');
+        bluefish.scale.setTo(.025,.025);
+        
+        // Make a purple fish!
+        var purplefish = purplefishies.create(280,290, 'purple');
+        purplefish.scale.setTo(.025,.025);
+        
     }
     
     function update() {
         game.physics.arcade.collide(shark, layer);
+        game.physics.arcade.collide(bluefishies, layer);
+        game.physics.arcade.collide(shark, bluefishies, killBlue, null, this);
+        game.physics.arcade.collide(shark, purplefishies, killPurple, null, this);
         
         shark.body.velocity.x = 0;
         shark.body.velocity.y = 0;
@@ -84,6 +104,15 @@ window.onload = function() {
         }
         else if (cursors.left.isDown) {
             shark.body.velocity.x = -120;
-        }
+        }    
+        
+    }
+    
+    function killBlue(shark, bluefish) {
+        bluefish.kill();
+    }
+    
+    function killPurple(shark, purplefish) {
+        purplefish.kill();
     }
 };
