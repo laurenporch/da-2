@@ -59,11 +59,6 @@ window.onload = function() {
         game.physics.arcade.enable(shark);
         shark.body.collideWorldBounds = true;
         
-        // Add the fishies.
-        bluefishies = game.add.group();
-        purplefishies = game.add.group();
-        bluefish = game.add.sprite(100,100,)
-        
         // Arrow key inputs.
         cursors = game.input.keyboard.createCursorKeys();
         
