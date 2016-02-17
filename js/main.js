@@ -16,37 +16,79 @@ window.onload = function() {
     var game = new Phaser.Game( 800, 600, Phaser.AUTO, 'game', { preload: preload, create: create, update: update } );
     
     function preload() {
-        // Load an image and call it 'logo'.
-        game.load.image( 'logo', 'assets/phaser.png' );
+        // Load all images and sprites.
+        game.load.image('background', 'assets/underwater-bubbles-4055.jpg');
+        game.load.tilemap('tileset', 'assets/underwater-tiles.json',null,Phaser.Tilemap.TILED_JSON);
+        game.load.image('tiles','assets/tiles_underwater.png');
+        game.load.spritesheet('shark', 'assets/shark-sprite.png',120,99);
+        game.load.spritesheet('blue', 'assets/BlueFish4.png',1435, 1080);
+        
     }
     
-    var bouncy;
+    var map;
+    var layer;
+    var shark;
+    var cursors;
+    var bluefishies;
+    var purplefishies;
+    var bluefish;
+    var purplefish;
     
     function create() {
-        // Create a sprite at the center of the screen using the 'logo' image.
-        bouncy = game.add.sprite( game.world.centerX, game.world.centerY, 'logo' );
-        // Anchor the sprite at its center, as opposed to its top-left corner.
-        // so it will be truly centered.
-        bouncy.anchor.setTo( 0.5, 0.5 );
+        // Start physics.
+        game.physics.startSystem(Phaser.Physics.ARCADE);
         
-        // Turn on the arcade physics engine for this sprite.
-        game.physics.enable( bouncy, Phaser.Physics.ARCADE );
-        // Make it bounce off of the world bounds.
-        bouncy.body.collideWorldBounds = true;
+        // Create large static background and set its bounds.
+        game.add.tileSprite(0,0,1920,1080,'background');
+        game.world.setBounds(0,0,1920,1080);
         
-        // Add some text using a CSS style.
-        // Center it in X, and position its top 15 pixels from the top of the world.
-        var style = { font: "25px Verdana", fill: "#9999ff", align: "center" };
-        var text = game.add.text( game.world.centerX, 15, "Build something awesome.", style );
-        text.anchor.setTo( 0.5, 0.0 );
+        // Add underwater tilemap and layer.
+        map = game.add.tilemap('tileset');
+        map.addTilesetImage('Underwater','tiles');
+        layer = map.createLayer('Tile Layer 1');
+        layer.resizeWorld();
+        map.setCollision(27, true, layer);
+        
+        // Add the shark/player.
+        shark = game.add.sprite(64,64,'shark');
+        shark.scale.setTo(0.5,0.5);
+        shark.anchor.set(0.5);
+        shark.animations.add('right', [0,4], 10, true);
+
+        //  Shark physics.
+        game.physics.arcade.enable(shark);
+        shark.body.collideWorldBounds = true;
+        
+        // Add the fishies.
+        bluefishies = game.add.group();
+        purplefishies = game.add.group();
+        bluefish = game.add.sprite(100,100,)
+        
+        // Arrow key inputs.
+        cursors = game.input.keyboard.createCursorKeys();
+        
+        // The camera should follow the shark.
+        game.camera.follow(shark);
+        
     }
     
     function update() {
-        // Accelerate the 'logo' sprite towards the cursor,
-        // accelerating at 500 pixels/second and moving no faster than 500 pixels/second
-        // in X or Y.
-        // This function returns the rotation angle that makes it visually match its
-        // new trajectory.
-        bouncy.rotation = game.physics.arcade.accelerateToPointer( bouncy, this.game.input.activePointer, 500, 500, 500 );
+        game.physics.arcade.collide(shark, layer);
+        
+        shark.body.velocity.x = 0;
+        shark.body.velocity.y = 0;
+        
+        if (cursors.down.isDown) {
+            shark.body.velocity.y = 120;
+        }
+        else if (cursors.up.isDown) {
+            shark.body.velocity.y = -120;
+        }
+        else if (cursors.right.isDown) {
+            shark.body.velocity.x = 120;
+        }
+        else if (cursors.left.isDown) {
+            shark.body.velocity.x = -120;
+        }
     }
 };
