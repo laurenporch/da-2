@@ -19,7 +19,7 @@ window.onload = function() {
         // Load all images and sprites.
         game.load.image('background', 'assets/underwater-bubbles-4055.jpg');
         game.load.tilemap('tileset', 'assets/underwater-tiles.json',null,Phaser.Tilemap.TILED_JSON);
-        game.load.image('tiles','assets/tiles_underwater.png');
+        game.load.image('tiles','assets/tiles_underwater.PNG');
         game.load.spritesheet('shark', 'assets/shark-sprite-full.png',120,99,8);
         game.load.spritesheet('blue', 'assets/BlueFish4.png',1435, 1080);
         game.load.spritesheet('purple', 'assets/RedFish2.png', 1296, 1080);
